@@ -1,0 +1,84 @@
+## Motor Trend: Automatic or Manual?
+========================================================
+
+Shenda Hong
+
+In this report, we exploring the relationship between a set of variables and miles per gallon (MPG) (outcome). And we are particularly interested in the following two questions:
+
+1. Is an automatic or manual transmission better for MPG?
+
+2. Quantify the MPG difference between automatic and manual transmissions.
+
+Let's first look at the dataset:
+
+```{r}
+data(mtcars)
+str(mtcars)
+```
+
+We mainly focusing on the variable mpg(miles per gallon) and am(1 represents automatic transmission, 0 represents manual transmission), here is the box plot:
+
+```{r out.width = 300}
+boxplot(mpg ~ am, data = mtcars, xlab = "am", ylab = "mpg", 
+        main = "mpg versus am")
+```
+
+Answer1: According to the above plot, we can easily figure out that auto transmission cars have higher mpg, means that they are better for MPG.
+
+Now let's Quantify the MPG difference between automatic and manual transmissions. 
+
+We First build a regression model.
+
+```{r, results = "hide"}
+fit<-glm(mpg ~ as.factor(cyl) + as.factor(vs) + as.factor(am) + as.factor(gear) + 
+           as.factor(carb) + disp + hp + drat + wt + qsec, data=mtcars)
+summary(fit)
+```
+
+The variables are too many to analyze, now selecting the best regression mode step by step.
+
+The most easy and effective way is use stepAIC function in MASS package.
+
+```{r, results = "hide"}
+library(MASS)
+stepAIC(fit, direction="backward")
+```
+
+The final regression mode is:
+
+mpg ~ as.factor(cyl) + as.factor(am) + hp + wt
+
+But we are not allowed to use any packages that are not in R-base or the library datasets.
+
+So let's use correlations instead:
+
+```{r, results = "hide"}
+cor(mtcars)
+```
+
+Choose variables which have higher correlations to mpg, The answer is similar.
+
+Fit the best model, plot residual and do some diagnostics.
+
+```{r results ='hide'}
+fitbest <- glm(mpg ~ as.factor(cyl) + as.factor(am) + hp + wt, data=mtcars)
+#plot(fitbest)
+```
+
+```{r}
+summary(fitbest)$coefficients
+```
+
+Answer 2: According to Coefficients of as.factor(am)1, Automatic transmission has higher mpg(1.8092 of increase adjusted by wt, hp, and cyl) compared to manual tranmission.
+
+## Summary
+
+Holding other variables constant, auto transmission cars have about 1.8 miles per gallon more than manual transmission, means that they are better for MPG.
+
+## Appendix
+
+residual plot and some diagnostics
+
+```{r echo=FALSE, out.width = 300}
+plot(fitbest)
+```
