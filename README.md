@@ -1,6 +1,6 @@
 # Coursera Johns Hopkins Specialization in Data Science course
 
-## The Data Scientist¡¯s Toolbox
+## The Data Scientist's Toolbox
 This is the primary introductory course for the specialization. It 
 should be taken first and has no prerequisite courses. Students 
 should be computer literate, have programmed in at least one 
